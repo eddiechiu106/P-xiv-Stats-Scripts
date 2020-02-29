@@ -75,10 +75,7 @@ def write_stats_to_db(conn,stats):
 	c = conn.cursor()
 	for stat in stats:
 		# todo: %s could be sql statement: need to sanitize input
-		sql = '''INSERT INTO works VALUES (NULL,'%s','%s','%s','%s','%s','%s')''' %(stat[0],stat[1],stat[2],stat[3],stat[4],stat[5])
-		print(sql)
-		c.execute(sql)
-	conn.commit()
+		write_stat_to_db(conn,stat)
 
 def write_stat_to_db(conn,stat):
 	# todo: %s could be sql statement: need to sanitize input
@@ -104,12 +101,6 @@ conn = sqlite3.connect('pixiv_stats.db')
 c = conn.cursor()
 
 driver = selenium_init()
-# url = "https://www.pixiv.net/en/users/11124552/artworks"
-# url2 = "https://www.pixiv.net/en/users/11124552/artworks?p=2"
-# stats = get_work_stats(driver,url,conn)
-# stats2 = get_work_stats(driver,url2,conn)
-
-# driver.quit()
 
 urls = []
 with open('urls.txt', 'r') as f:
@@ -118,9 +109,6 @@ with open('urls.txt', 'r') as f:
 for url in urls:
 	stats = get_work_stats(driver,url,conn)
 driver.quit()
-
-#write_to_db(c, stats)
-#write_to_db(c, stats2)
 
 conn.commit()
 conn.close()
